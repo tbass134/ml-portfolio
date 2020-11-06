@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Preprocessing | fastpages</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Preprocessing" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="An easy to use blogging platform with support for Jupyter Notebooks." />
+<meta property="og:description" content="An easy to use blogging platform with support for Jupyter Notebooks." />
+<link rel="canonical" href="https://tbass134.github.io/ml-portfolio/2020/11/06/SMS_Spam_Classifier_Demo.html" />
+<meta property="og:url" content="https://tbass134.github.io/ml-portfolio/2020/11/06/SMS_Spam_Classifier_Demo.html" />
+<meta property="og:site_name" content="fastpages" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-11-06T00:00:00-06:00" />
+<script type="application/ld+json">
+{"description":"An easy to use blogging platform with support for Jupyter Notebooks.","url":"https://tbass134.github.io/ml-portfolio/2020/11/06/SMS_Spam_Classifier_Demo.html","@type":"BlogPosting","headline":"Preprocessing","dateModified":"2020-11-06T00:00:00-06:00","datePublished":"2020-11-06T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://tbass134.github.io/ml-portfolio/2020/11/06/SMS_Spam_Classifier_Demo.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/ml-portfolio/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://tbass134.github.io/ml-portfolio/feed.xml" title="fastpages" /><link rel="shortcut icon" type="image/x-icon" href="/ml-portfolio/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/ml-portfolio/">fastpages</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/ml-portfolio/about/">About Me</a><a class="page-link" href="/ml-portfolio/search/">Search</a><a class="page-link" href="/ml-portfolio/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Preprocessing</h1><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-11-06T00:00:00-06:00" itemprop="datePublished">
+        Nov 6, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      14 min read
+    
+</span></p>
+
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/tbass134/ml-portfolio/tree/master/_notebooks/2020-11-06-SMS_Spam_Classifier_Demo.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/ml-portfolio/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/tbass134/ml-portfolio/master?filepath=_notebooks%2F2020-11-06-SMS_Spam_Classifier_Demo.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/ml-portfolio/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/tbass134/ml-portfolio/blob/master/_notebooks/2020-11-06-SMS_Spam_Classifier_Demo.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/ml-portfolio/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-11-06-SMS_Spam_Classifier_Demo.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">&gt;</span> <span class="n">Building</span> <span class="n">a</span> <span class="n">machine</span> <span class="n">learing</span> <span class="n">model</span> <span class="n">to</span> <span class="n">predict</span> <span class="n">that</span> <span class="n">a</span> <span class="n">SMS</span> <span class="n">messages</span> <span class="ow">is</span> <span class="n">spam</span> <span class="ow">or</span> <span class="ow">not</span>
+
+<span class="o">-</span> <span class="n">toc</span><span class="p">:</span> <span class="n">true</span> 
+<span class="o">-</span> <span class="n">badges</span><span class="p">:</span> <span class="n">true</span>
+<span class="o">-</span> <span class="n">comments</span><span class="p">:</span> <span class="n">true</span>
+<span class="o">-</span> <span class="n">categories</span><span class="p">:</span> <span class="p">[</span><span class="n">jupyter</span><span class="p">]</span>
+<span class="o">-</span> <span class="n">image</span><span class="p">:</span> <span class="n">images</span><span class="o">/</span><span class="n">chart</span><span class="o">-</span><span class="n">preview</span><span class="o">.</span><span class="n">png</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this notebook, we'll show how to build a simple machine learning model to predict that a SMS is spam or not.</p>
+<p>The notebook was built to go along with my talk in May 2020 for <a href="https://www.vonage.com/about-us/vonage-stories/vonage-developer-day/">Vonage Developer Day</a></p>
+<p>youtube: <a href="https://www.youtube.com/watch?v=5d4_HpMLXf4&amp;t=1s">https://www.youtube.com/watch?v=5d4_HpMLXf4&amp;t=1s</a></p>
+<p>We'll be using the scikit-learn library to train a model on a set of messages which are labeled as spam and non spam(aka ham) messages.</p>
+<p>After our model is trained, we'll deploy to an AWS Lambda in which its input will be a message, and its output will be the prediction(spam or ham).</p>
+<p>Before we build a model, we'll need some data. So we'll use the <a href="http://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection">SMS Spam Collection DataSet</a>.</p>
+<p>This dataset contains over 5k messages which are labeled spam or ham.
+In the following cell, we'll download the dataset</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>wget --no-check-certificate https://archive.ics.uci.edu/ml/machine-learning-databases/00228/smsspamcollection.zip
+<span class="o">!</span>unzip /content/smsspamcollection.zip
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>--2020-07-22 00:49:18--  https://archive.ics.uci.edu/ml/machine-learning-databases/00228/smsspamcollection.zip
+Resolving archive.ics.uci.edu (archive.ics.uci.edu)... 128.195.10.252
+Connecting to archive.ics.uci.edu (archive.ics.uci.edu)|128.195.10.252|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 203415 (199K) [application/x-httpd-php]
+Saving to: ‘smsspamcollection.zip’
+
+smsspamcollection.z 100%[===================&gt;] 198.65K   509KB/s    in 0.4s    
+
+2020-07-22 00:49:19 (509 KB/s) - ‘smsspamcollection.zip’ saved [203415/203415]
+
+Archive:  /content/smsspamcollection.zip
+  inflating: SMSSpamCollection       
+  inflating: readme                  
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Once we have downloaded the datatset, we'll load into a Pandas Dataframe and view the first 10 rows of the dataset.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;/content/SMSSpamCollection&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>label</th>
+      <th>message</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>ham</td>
+      <td>Go until jurong point, crazy.. Available only ...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>ham</td>
+      <td>Ok lar... Joking wif u oni...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>spam</td>
+      <td>Free entry in 2 a wkly comp to win FA Cup fina...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>ham</td>
+      <td>U dun say so early hor... U c already then say...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>ham</td>
+      <td>Nah I don't think he goes to usf, he lives aro...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next, we need to first understand the data before building a model.</p>
+<p>We'll first need to see how many messages are considered spam or ham</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>ham     4825
+spam     747
+Name: label, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>From the cell above, we see that 4825 messages are valid messages, and only 747 messages are labled as spam.</p>
+<p>Lets now just view some messages that are ham and some that are spam</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">spam</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;spam&quot;</span><span class="p">]</span>
+<span class="n">spam</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>label</th>
+      <th>message</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>spam</td>
+      <td>Free entry in 2 a wkly comp to win FA Cup fina...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>spam</td>
+      <td>FreeMsg Hey there darling it's been 3 week's n...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>spam</td>
+      <td>WINNER!! As a valued network customer you have...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>spam</td>
+      <td>Had your mobile 11 months or more? U R entitle...</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>spam</td>
+      <td>SIX chances to win CASH! From 100 to 20,000 po...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ham</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ham&quot;</span><span class="p">]</span>
+<span class="n">ham</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>label</th>
+      <th>message</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>ham</td>
+      <td>Go until jurong point, crazy.. Available only ...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>ham</td>
+      <td>Ok lar... Joking wif u oni...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>ham</td>
+      <td>U dun say so early hor... U c already then say...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>ham</td>
+      <td>Nah I don't think he goes to usf, he lives aro...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>ham</td>
+      <td>Even my brother is not like to speak with me. ...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>after looking at some messages that spam and ham, we can see the spam messages look spammy..</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The next step is to get the dataset ready to build a model. A machine learning model can only deal with numbers, so we'll have to convert our text into numbers using <code>TfidfVectorizer</code></p>
+<p>TfidfVectorizer converts a collection of raw documents to a matrix of <a href="http://www.tfidf.com/">term frequency-inverse document frequency</a> features. Also known as TF-IDF.</p>
+<p>In our case, a document is each message. For each message, we'll compute the number of times a term is in our document divied by all the terms in the document times the total number of documents divded by the number of documents that contain the specific term</p>
+<p><img src="https://miro.medium.com/max/1066/1*eIDZG3Ot5DP8SKXAvBVALQ.png" alt="" />
+<a href="https://towardsdatascience.com/spam-or-ham-introduction-to-natural-language-processing-part-2-a0093185aebd">source</a></p>
+<p>The output will be a matrix in which the rows will be all the terms, and the colums will be all the documents
+<img src="https://miro.medium.com/max/1400/1*n4s0LZS1Qi46pF3aaYzE0A.png" alt="" /></p>
+<p><a href="https://github.com/mbernico/CS570/blob/master/module_1/TFIDF.ipynb">This notebook by Mike Bernico</a> by goes into more detail on TF-IDF and how to calucate without using sklearn.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>first, we'll split the dataset into a train and test set. For the training set, we'll take 80% of the data from the dataset, and use that for training the model. The rest of the dataset(20%) will be used for testing the model.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">],</span> <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>once we split our data, we can use the TfidfVectorizer. This will return a sparse matrix(a matrix with mostly 0's)</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">()</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After we fit the TfidfVectorizer to the sentenes, lets plot the matrix as a pandas dataframe to understand what TfidfVectorizer is doing</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">feature_names</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">()</span>
+<span class="n">tfid_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">tfs</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">todense</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">feature_names</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tfid_df</span><span class="p">[</span><span class="mi">1200</span><span class="p">:</span><span class="mi">1205</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>           0     1     2         3     4     ...  4452  4453  4454  4455  4456
+backdoor    0.0   0.0   0.0  0.000000   0.0  ...   0.0   0.0   0.0   0.0   0.0
+backwards   0.0   0.0   0.0  0.000000   0.0  ...   0.0   0.0   0.0   0.0   0.0
+bad         0.0   0.0   0.0  0.193352   0.0  ...   0.0   0.0   0.0   0.0   0.0
+badass      0.0   0.0   0.0  0.000000   0.0  ...   0.0   0.0   0.0   0.0   0.0
+badly       0.0   0.0   0.0  0.000000   0.0  ...   0.0   0.0   0.0   0.0   0.0
+
+[5 rows x 4457 columns]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>From the table above, each word in our dataset are the rows are the sentenes index are the columns. We've only plotted a few rows in the middle of the dataframe for a better understanding of the data.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next, we'll train a model using Gaussian Naive Bayes in scikit-learn. Its a good starting algorithm for text classification. We'll then print out the accuracy of the model by using the training set and our confusion_matrix</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Model-Training">Model Training<a class="anchor-link" href="#Model-Training"> </a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To train our model, we'll use A Navie Bayes algorhtymn to train our model</p>
+<p>The formula for Navie Bayes is:
+$$ P(S|W) = P(W|S) \times P(S) \over P(W|S) \times P(S) + P(W|H) \times P(h) $$.</p>
+<p><strong>P(s|w)</strong>  - The probability(<strong>P</strong>) of a message is spam(<strong>s</strong>) Given(<strong>|</strong>) a word(<strong>w</strong>)</p>
+<p><strong>=</strong></p>
+<p><strong>P(w|s)</strong>   - probability(<strong>P</strong>) that a word(<strong>w</strong>) is spam(<strong>s</strong>)</p>
+<p>*</p>
+<p><strong>P(s)</strong> - Overall probability(<strong>P</strong>) that ANY message is spam(<strong>s</strong>)</p>
+<p><strong>/</strong></p>
+<p><strong>P(w|s)</strong> - probability(<strong>P</strong>) that a word(<strong>w</strong>) exists in spam messages(<strong>s</strong>)</p>
+<p>*</p>
+<p><strong>P(s)</strong> - Overall probability(<strong>P</strong>) that ANY message is spam(<strong>s</strong>)</p>
+<p><strong>+</strong></p>
+<p><strong>P(w|h)</strong> - probability(<strong>P</strong>) the word(<strong>w</strong>) appears in non-spam(<strong>h</strong>) messages</p>
+<p>*</p>
+<p><strong>P(h)</strong> - Overall probability(<strong>P</strong>) that any message is not-spam(<strong>h</strong>)</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">GaussianNB</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">classification_report</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span><span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>GaussianNB(priors=None, var_smoothing=1e-09)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="o">.</span><span class="n">toarray</span><span class="p">())</span>
+<span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.8986547085201794</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>              precision    recall  f1-score   support
+
+         ham       0.99      0.89      0.94       968
+        spam       0.57      0.93      0.71       147
+
+    accuracy                           0.90      1115
+   macro avg       0.78      0.91      0.82      1115
+weighted avg       0.93      0.90      0.91      1115
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cmtx</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ham&#39;</span><span class="p">,</span> <span class="s1">&#39;spam&#39;</span><span class="p">]),</span> 
+    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ham&#39;</span><span class="p">,</span> <span class="s1">&#39;spam&#39;</span><span class="p">],</span> 
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ham&#39;</span><span class="p">,</span> <span class="s1">&#39;spam&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cmtx</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>      ham  spam
+ham   866   102
+spam   11   136
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Grid-Search">Grid Search<a class="anchor-link" href="#Grid-Search"> </a></h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+<span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;var_smoothing&quot;</span><span class="p">:[</span><span class="mf">1e-9</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">]}</span>
+<span class="n">gs_clf</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+        <span class="n">GaussianNB</span><span class="p">(),</span> <span class="n">parameters</span><span class="p">)</span>
+<span class="n">gs_clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span><span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>GridSearchCV(cv=None, error_score=nan,
+             estimator=GaussianNB(priors=None, var_smoothing=1e-09),
+             iid=&#39;deprecated&#39;, n_jobs=None,
+             param_grid={&#39;var_smoothing&#39;: [1e-09, 1e-05, 0.1]},
+             pre_dispatch=&#39;2*n_jobs&#39;, refit=True, return_train_score=False,
+             scoring=None, verbose=0)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">gs_clf</span><span class="o">.</span><span class="n">best_params_</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{&#39;var_smoothing&#39;: 0.1}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">gs_clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="o">.</span><span class="n">toarray</span><span class="p">())</span>
+<span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.9650224215246637</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cmtx</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ham&#39;</span><span class="p">,</span> <span class="s1">&#39;spam&#39;</span><span class="p">]),</span> 
+    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ham&#39;</span><span class="p">,</span> <span class="s1">&#39;spam&#39;</span><span class="p">],</span> 
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ham&#39;</span><span class="p">,</span> <span class="s1">&#39;spam&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cmtx</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>      ham  spam
+ham   932    36
+spam    3   144
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>              precision    recall  f1-score   support
+
+         ham       1.00      0.96      0.98       968
+        spam       0.80      0.98      0.88       147
+
+    accuracy                           0.97      1115
+   macro avg       0.90      0.97      0.93      1115
+weighted avg       0.97      0.97      0.97      1115
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>From our trained model, we get about 96% accuracy. Which is pretty good.</p>
+<p>We also print out the confusion_matrix. This shows how many messages were classificed correctly. In the first column and first row, we see that 866 messages that were classified as ham were actaully ham and 136 messages that were predicted as spam, were in fact spam.</p>
+<p>Next, lets test our model with some examples messages</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Inference">Inference<a class="anchor-link" href="#Inference"> </a></h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">message</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="s2">&quot;i&#39;m on my way home&quot;</span><span class="p">])</span>
+<span class="n">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+<span class="n">gs_clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([&#39;ham&#39;], dtype=&#39;&lt;U4&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">message</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="s2">&quot;this offer is to good to be true&quot;</span><span class="p">])</span>
+<span class="n">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+<span class="n">gs_clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([&#39;spam&#39;], dtype=&#39;&lt;U4&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The final step is the save the model and the tf-idf vectorizer. We will use these when clasifing incoming messages on our lambda function</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">joblib</span>
+<span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">gs_clf</span><span class="p">,</span> <span class="s2">&quot;model.pkl&quot;</span><span class="p">)</span>
+<span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">vectorizer</span><span class="p">,</span> <span class="s2">&quot;vectorizer.pkl&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&#39;vectorizer.pkl&#39;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Lambda">Lambda<a class="anchor-link" href="#Lambda"> </a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Once our model is trained, we'll now put it in a production envioroment.</p>
+<p>For this example, we'll create a lambda function to host our model.</p>
+<p>The lambda function will be attached to an API gateway in which we'll be able to have a endpoint to make our predictions</p>
+<p>Deploying a scikit-learn model to lambda isnt as easy as you would think. You can't just import your libraries, espcially scikit-learn to work.</p>
+<p>Here's what we'll need to do in order to deploy our model</p>
+<ul>
+<li>Spin up EC2 instance</li>
+<li>SSH into the instance and install our dependencies</li>
+<li>copy the lambda function code from this <a href="https://github.com/tbass134/SMS-Spam-Classifier-lambda">repo</a></li>
+<li>Run a bash script that zips up the :</li>
+<li>zip the code, including the packages</li>
+<li>upload to S3</li>
+<li>point the lambda function to to s3 file</li>
+</ul>
+<h2 id="Create-an-EC2-instance">Create an EC2 instance<a class="anchor-link" href="#Create-an-EC2-instance"> </a></h2><p>If you have an aws account:</p>
+<ul>
+<li>Go to EC2 on the console and click <code>Launch Instance</code>.</li>
+<li>Select the first available AMI(Amazon Linux 2 AMI). </li>
+<li>Select the t2.micro instance, then click <code>Review and Launch</code></li>
+<li>Click the Next button</li>
+<li>Under IAM Role, Click Create New Role</li>
+<li>Create a new role with the following policies:
+AmazonS3FullAccess
+AWSLambdaFullAccess
+Name your role and click create role</li>
+<li>Under permissions, create a new role that has access to the following:</li>
+<li>lambda full access</li>
+<li>S3 full access</li>
+</ul>
+<p>These will be needed when uploading our code to your S3 bucket and pointing the lambda function to zip file that will be creating later.</p>
+<ul>
+<li>Create a new private key pair and click <code>Lanuch Instance</code></li>
+<li>Note, in order to use the key, you have to run <code>chmod 400</code> on the key when downloaded to your local machine.</li>
+</ul>
+<p>After the instance spins up, you'll need to connect to it via ssh</p>
+<ul>
+<li>Find the newly created instance on EC2 and click <code>Connect</code></li>
+<li>On your local machine, navigate to terminal and run the the command from the Example. It will look something like:<div class="highlight"><pre><span></span>ssh -i <span class="s2">&quot;{PATH TO KEY}&quot;</span> <span class="o">{</span>user_name<span class="o">}</span>@ec2-<span class="o">{</span>instance_ip<span class="o">}</span>.compute-1.amazonaws.com
+</pre></div>
+</li>
+</ul>
+<h2 id="Install-packages">Install packages<a class="anchor-link" href="#Install-packages"> </a></h2><p>Before installing packages, you will need to install python and pip. You can follow the steps <a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install-linux.html">here</a>
+These will most likey be:</p>
+<div class="highlight"><pre><span></span>sudo yum install python37
+curl -O https://bootstrap.pypa.io/get-pip.py
+ python3 get-pip.py --user
+ verify pip is installed using
+ <span class="sb">```</span>bash
+ pip --version
+</pre></div>
+<p>You will also need to install git</p>
+<div class="highlight"><pre><span></span>sudo yum install git -y
+</pre></div>
+<p>When connected to the instance, clone the repo</p>
+<div class="highlight"><pre><span></span>git clone https://github.com/tbass134/SMS-Spam-Classifier-lambda
+</pre></div>
+<p>This repo contains everything we need to make predictions. These includes the pickle files from the model and vectorizer, as well as the lambda function to make predictions and returns its response
+cd into the SMS-Spam-Classifier-lambda/lambda folder</p>
+<ul>
+<li>Next, you you will need to install the <code>sklearn</code> library.</li>
+<li>On your instance, type:
+<code>pip install -t . sklearn</code>
+This will import the library into its own folder</li>
+</ul>
+<p>Next, if you want to use your trained model, it will need to be uploaded into your ec2 instance. 
+If your using Google Colab, navigate to the files tab, right click on <code>my_model.pk</code> and <code>vectorizer.pkl</code> and click download.
+Note, the sample repo already contains a trained model so this is optional.</p>
+<p>To upload your trained model, you can use a few ways:</p>
+<ul>
+<li><p>Fork the repo, add your models, and checkout on the ec2 instance
+You can use <code>scp</code> to copy to files from your local machine to the instance
+To upload the model file we saved</p>
+<div class="highlight"><pre><span></span>scp -i <span class="o">{</span>PATH_TO_KEY<span class="o">}</span> vectorizer.pkl ec2-user@<span class="o">{</span>INSTANCE_NAME<span class="o">}</span>:
+</pre></div>
+<p>and we'll do the same for the model</p>
+<div class="highlight"><pre><span></span>scp -i <span class="o">{</span>PATH_TO_KEY<span class="o">}</span> my_model.pkl ec2-user@<span class="o">{</span>INSTANCE_NAME<span class="o">}</span>:
+</pre></div>
+</li>
+</ul>
+<ul>
+<li><p>The other method is to upload the files to s3 and have your lambda function load the files from there using Boto</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">load_s3_file</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">Object</span><span class="p">(</span><span class="n">MODEL_BUCKET</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s1">&#39;Body&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">body</span><span class="p">))</span>   
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_s3_file</span><span class="p">({</span><span class="n">PATH_TO_S3_MODEL</span><span class="p">}</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">load_s3_file</span><span class="p">({</span><span class="n">PATH_TO_S3_VECTORIZER</span><span class="p">}</span>
+</pre></div>
+</li>
+</ul>
+<h2 id="Create-lambda-function">Create lambda function<a class="anchor-link" href="#Create-lambda-function"> </a></h2><ul>
+<li>On the AWS console, navigate to <a href="https://console.aws.amazon.com/lambda">https://console.aws.amazon.com/lambda</a></li>
+<li>Click on the Create function button</li>
+<li>Make sure <code>Author from scratch</code> is selected</li>
+<li>Name your function</li>
+<li>Set the runtime to Python 3.7</li>
+<li>Under Execution Role, create a new role with basic permissions</li>
+<li>Click <code>Create Function</code></li>
+</ul>
+<h2 id="Create-S3-bucket">Create S3 bucket<a class="anchor-link" href="#Create-S3-bucket"> </a></h2><p>In order to push our code to a lambda function, we need to first copy zip up the code and libraies to a S3 bucket. 
+From here, our lambda function will load the zip file from this bucket.</p>
+<ul>
+<li>On the AWS console under <code>Services</code>, Search for <code>S3</code></li>
+<li>Click <code>Create Bucket</code></li>
+<li>Name your bucket, and click Create Bucket at the bottom of the page.</li>
+</ul>
+<h2 id="Upload-to-lambda">Upload to lambda<a class="anchor-link" href="#Upload-to-lambda"> </a></h2><p>Next, we'll run the <code>publish.sh</code>script inside the root of the repo, which does the following:</p>
+<ul>
+<li>zip up the pacakages, including our Python code, model and transformer.</li>
+<li>upload the zip to an S3 bucket</li>
+<li>point our lambda function to this bucket</li>
+</ul>
+<p>when calling this script, we need to pass in 3 arguments:</p>
+<ul>
+<li>The name of the zip file. We can call it <code>zip.zip</code> for now</li>
+<li>The name of the S3 bucket that we will upload the zip to</li>
+<li>the name of lambda function <div class="highlight"><pre><span></span>bash publish.sh <span class="o">{</span>ZIP_FILE_NAME<span class="o">}</span> <span class="o">{</span>S3_BUCKET<span class="o">}</span> <span class="o">{</span>LAMBDA_FUNCTION_NAME<span class="o">}</span>
+</pre></div>
+</li>
+</ul>
+<p>If everything is successful, your lambda function will be deployed. 
+If you see errors, make sure your EC2 instance has a IAM role that has an S3 permission, and Lambda permissions.
+See this <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2.html">guide</a> for more info.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Add-HTTP-endpoint">Add HTTP endpoint<a class="anchor-link" href="#Add-HTTP-endpoint"> </a></h2><p>The final piece will be to add a API gateway.
+On the configuration tab on the lambda function</p>
+<ul>
+<li>click <code>Add Trigger</code></li>
+<li>Click on the select a trigger box and select <code>API Gateway</code></li>
+<li>Click on <code>Create an API</code></li>
+<li>Set API Type to <code>REST API</code></li>
+<li>Set Security to <code>OPEN</code> (make sure to secure when deploying for production)</li>
+<li>At the bottom, click <code>Add</code></li>
+</ul>
+<p>For detail, see this <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/integrating-api-with-aws-services-lambda.html#api-as-lambda-proxy-create-api-resources">documentation</a></p>
+<p>We can now test the endpoint by using curl and making a call to our endpoint.
+Under <code>API Gateway</code> section in lambda, click on oi</p>
+<p>In the lambda function, we are looking for the <code>message</code> GET parameter. When we make our request, we'll pass a query parameter called <code>message</code>. This will contain the string we want to make a prediction on.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ham_message</span> <span class="o">=</span> <span class="s2">&quot;im on my way home&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;%20&quot;</span><span class="p">)</span>
+<span class="n">ham_message</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>%%bash -s <span class="s2">&quot;</span><span class="nv">$ham_message</span><span class="s2">&quot;</span>
+curl --location --request GET <span class="s2">&quot;https://e18fmcospk.execute-api.us-east-1.amazonaws.com/default/spam-detection?message=</span><span class="nv">$1</span><span class="s2">&quot;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{&#34;prediction&#34;: &#34;ham&#34;}</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    21  100    21    0     0     10      0  0:00:02  0:00:02 --:--:--    10
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">spam_message</span> <span class="o">=</span> <span class="s2">&quot;this offer is to good to be true&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;%20&quot;</span><span class="p">)</span>
+<span class="n">spam_message</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>%%bash -s <span class="s2">&quot;</span><span class="nv">$spam_message</span><span class="s2">&quot;</span>
+curl --location --request GET <span class="s2">&quot;https://e18fmcospk.execute-api.us-east-1.amazonaws.com/default/spam-detection?message=</span><span class="nv">$1</span><span class="s2">&quot;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{&#34;prediction&#34;: &#34;spam&#34;}</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    22  100    22    0     0     13      0  0:00:01  0:00:01 --:--:--    13
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Google-Cloud-Functions">Google Cloud Functions<a class="anchor-link" href="#Google-Cloud-Functions"> </a></h1><p>For non-amazon users, we can use Google Cloud Functions to deploy our model for use in our Vonage SMS API app
+<img src="https://pbs.twimg.com/media/EdYKMFDUwAAwj0T?format=png&amp;name=large" alt="" />
+Code is <a href="https://gist.github.com/tbass134/7985c0adf44c938d6e683c18dabac8f9">here</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Create-Vonage-SMS-Application">Create Vonage SMS Application<a class="anchor-link" href="#Create-Vonage-SMS-Application"> </a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The final step is to build a Vonage SMS Application.
+Have a look at this blog post on how to build yourself
+Our application will receive an SMS
+<a href="https://developer.nexmo.com/messaging/sms/code-snippets/receiving-an-sms">https://developer.nexmo.com/messaging/sms/code-snippets/receiving-an-sms</a></p>
+<p>and will send a SMS back to the user with its prediction
+<a href="https://developer.nexmo.com/messaging/sms/code-snippets/send-an-sms">https://developer.nexmo.com/messaging/sms/code-snippets/send-an-sms</a></p>
+<p><img src="https://i.ibb.co/8mxfBKW/IMG-9-BA66209-F969-1.png" alt="" /></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To work through this example, you will need the following</p>
+<ul>
+<li>Login / Signup to <a href="https://dashboard.nexmo.com/sign-up">Vonage SMS API</a></li>
+<li>Rent a phone number</li>
+<li>Assign a publicly accessable url via <a href="https://www.nexmo.com/blog/2017/07/04/local-development-nexmo-ngrok-tunnel-dr">ngrok</a> to that phone number</li>
+</ul>
+<p>We'll also build a simple Flask app that will make a request to our API Gateway</p>
+<div class="highlight"><pre><span></span>git clone https://github.com/tbass134/SMS-Spam-Classifier-lambda.git
+<span class="nb">cd</span> app
+</pre></div>
+<p>Next we'll create a virtual environment and install the requirements using pip</p>
+<div class="highlight"><pre><span></span>virtualenv venv --python<span class="o">=</span>python3
+<span class="nb">source</span> venv/bin/activate
+pip install -r requirments.txt
+</pre></div>
+<p>Next, create a <code>.env</code> file with the following:</p>
+<div class="highlight"><pre><span></span><span class="nv">NEXMO_API_KEY</span><span class="o">={</span>YOUR_NEXMO_API_KEY<span class="o">}</span>
+<span class="nv">NEXMO_API_SECRET</span><span class="o">={</span>YOUR_NEXMO_API_SECRET<span class="o">}</span>
+<span class="nv">NEXMO_NUMBER</span><span class="o">={</span>YOUR_NEXMO_NUMBER
+<span class="nv">API_GATEWAY_URL</span><span class="o">={</span>FULL_API_GATEWAY<span class="o">}</span>
+</pre></div>
+<p>Finally, you can run the application:</p>
+<div class="highlight"><pre><span></span>python app.py
+</pre></div>
+<p>This will spin up a webserver listening on PORT 3000</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Fin">Fin<a class="anchor-link" href="#Fin"> </a></h1>
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><a class="u-url" href="/ml-portfolio/2020/11/06/SMS_Spam_Classifier_Demo.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/ml-portfolio/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/ml-portfolio/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/ml-portfolio/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>An easy to use blogging platform with support for Jupyter Notebooks.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/fastai" title="fastai"><svg class="svg-icon grey"><use xlink:href="/ml-portfolio/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/fastdotai" title="fastdotai"><svg class="svg-icon grey"><use xlink:href="/ml-portfolio/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
