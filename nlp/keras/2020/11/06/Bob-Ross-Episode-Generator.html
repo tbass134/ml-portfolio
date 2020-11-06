@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Bob Ross Episode Text Generator | fastpages</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Bob Ross Episode Text Generator" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The following shows how to create a text generator using LSTM’s in Keras." />
+<meta property="og:description" content="The following shows how to create a text generator using LSTM’s in Keras." />
+<link rel="canonical" href="https://tbass134.github.io/ml-portfolio/nlp/keras/2020/11/06/Bob-Ross-Episode-Generator.html" />
+<meta property="og:url" content="https://tbass134.github.io/ml-portfolio/nlp/keras/2020/11/06/Bob-Ross-Episode-Generator.html" />
+<meta property="og:site_name" content="fastpages" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-11-06T00:00:00-06:00" />
+<script type="application/ld+json">
+{"description":"The following shows how to create a text generator using LSTM’s in Keras.","url":"https://tbass134.github.io/ml-portfolio/nlp/keras/2020/11/06/Bob-Ross-Episode-Generator.html","@type":"BlogPosting","headline":"Bob Ross Episode Text Generator","dateModified":"2020-11-06T00:00:00-06:00","datePublished":"2020-11-06T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://tbass134.github.io/ml-portfolio/nlp/keras/2020/11/06/Bob-Ross-Episode-Generator.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/ml-portfolio/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://tbass134.github.io/ml-portfolio/feed.xml" title="fastpages" /><link rel="shortcut icon" type="image/x-icon" href="/ml-portfolio/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/ml-portfolio/">fastpages</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/ml-portfolio/about/">About Me</a><a class="page-link" href="/ml-portfolio/search/">Search</a><a class="page-link" href="/ml-portfolio/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Bob Ross Episode Text Generator</h1><p class="page-description">The following shows how to create a text generator using LSTM's in Keras.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-11-06T00:00:00-06:00" itemprop="datePublished">
+        Nov 6, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      17 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/ml-portfolio/categories/#nlp">nlp</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/ml-portfolio/categories/#keras">keras</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/tbass134/ml-portfolio/tree/master/_notebooks/2020-11-06-Bob-Ross-Episode-Generator.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/ml-portfolio/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/tbass134/ml-portfolio/master?filepath=_notebooks%2F2020-11-06-Bob-Ross-Episode-Generator.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/ml-portfolio/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/tbass134/ml-portfolio/blob/master/_notebooks/2020-11-06-Bob-Ross-Episode-Generator.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/ml-portfolio/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Model">Model </a></li>
+<li class="toc-entry toc-h2"><a href="#Deeper">Deeper </a></li>
+<li class="toc-entry toc-h2"><a href="#Load-Model">Load Model </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-11-06-Bob-Ross-Episode-Generator.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This project shows how we can gather data and build a model to generate text in the style of bob ross. 
+In order to gather data, we'll be using a script called <a href="bob_ross/scripts/download-yt-playlist.py">download-yt-playlist.py</a> that uses the YouTube API to download a Bob Ross playlist. This playlist contains most of the Bob Ross epiodes as well as the transcript from each epiode</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install beautifulsoup4
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Collecting beautifulsoup4
+  Using cached https://files.pythonhosted.org/packages/f8/c7/741c97d7366f4779ca73d244904978b43a81fd37d85fcf05ad19d472c1ce/beautifulsoup4-4.6.3-py2-none-any.whl
+Installing collected packages: beautifulsoup4
+Successfully installed beautifulsoup4-4.6.3
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next, we'll import the dataset that we created using the <code>download-ty-playlist</code> script,
+The csv is included in the repo</p>
+<p>we'll then load the dataset into a pandas dataframe
+Our csv contains 249 rows, which are the number of episodes that was returned by the script.
+We've removed any columns that are empty, since not all of the episodes had a transcript</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'bob_ross/bob_ross_episodes.csv'</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">'snippet.publishedAt'</span><span class="p">],</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">'snippet.description'</span><span class="p">,</span> <span class="s1">'snippet.publishedAt'</span><span class="p">,</span> <span class="s1">'snippet.title'</span><span class="p">,</span> <span class="s1">'transcript'</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># df['snippet.publishedAt'] =pd.to_datetime(df['snippet.publishedAt'])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">'snippet.publishedAt'</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>snippet.publishedAt</th>
+      <th>snippet.title</th>
+      <th>transcript</th>
+    </tr>
+    <tr>
+      <th>snippet.description</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Season 21 of The Joy of Painting with Bob Ross features the following wonderful painting instructions: Valley View, Tranquil Dawn, Royal Majesty, Serenity, Cabin at Trails End, Mountain Rhapsody, Wilderness Cabin, By the Sea, Indian Summer, Blue Winter, Desert Glow, Lone Mountain, and Florida’s Glory.\n\nSubscribe to the official Bob Ross YouTube channel - http://bit.ly/BobRossSubscribe\n\nSeason 21 Playlist: https://www.youtube.com/playlist?list=PLAEQD0ULngi5_UcEWkQZu23WzQP1Tkxq3\n\nThe Joy of Painting Season 20 is now on iTunes! - http://bit.ly/iTunesBobRoss\n\nOfficial Bob Ross website - http://www.BobRoss.com\n\nOfficial Bob Ross Twitch.tv Stream! - http://twitch.tv/BobRoss\n\nAll episodes of Bob Ross are now live on Roku - http://bit.ly/BobRossOnRoku\n\nOriginally aired on 9/5/1990</th>
+      <td>2015-03-25 16:32:35</td>
+      <td>Bob Ross - Valley View (Season 21 Episode 1)</td>
+      <td>(bright music) - Hello, I&amp;#39;m Bob Ross and\n...</td>
+    </tr>
+    <tr>
+      <th>Season 6 of The Joy of Painting with Bob Ross features the following wonderful painting instructions: Blue River, Nature's Edge, Morning Mist, Whispering Stream, Secluded Forest, Snow Trail, Arctic Beauty, Horizons West, High Chateau, Country Life, Western Expanse, Marshlands, and Blaze of Color.\n\nSubscribe to the official Bob Ross YouTube channel - http://bit.ly/BobRossSubscribe\n\nSeason 6 Playlist: https://www.youtube.com/playlist?list=PLAEQD0ULngi5UR35RJsvL0Xvlm3oeY4Ma\n\nThe Joy of Painting : Season 20 is now on iTunes! http://bit.ly/iTunesBobRoss\n\nOfficial Bob Ross website - http://www.BobRoss.com\n\nOfficial Bob Ross Twitch.tv Stream! - http://twitch.tv/BobRoss</th>
+      <td>2015-03-27 17:01:20</td>
+      <td>Bob Ross - Arctic Beauty (Season 6 Episode 7)</td>
+      <td>- Welcome back. Awful glad you could join me t...</td>
+    </tr>
+    <tr>
+      <th>Season 6 of The Joy of Painting with Bob Ross features the following wonderful painting instructions: Blue River, Nature's Edge, Morning Mist, Whispering Stream, Secluded Forest, Snow Trail, Arctic Beauty, Horizons West, High Chateau, Country Life, Western Expanse, Marshlands, and Blaze of Color.\n\nSubscribe to the official Bob Ross YouTube channel - http://bit.ly/BobRossSubscribe\n\nSeason 6 Playlist: https://www.youtube.com/playlist?list=PLAEQD0ULngi5UR35RJsvL0Xvlm3oeY4Ma\n\nThe Joy of Painting : Season 20 is now on iTunes! http://bit.ly/iTunesBobRoss\n\nOfficial Bob Ross website - http://www.BobRoss.com\n\nOfficial Bob Ross Twitch.tv Stream! - http://twitch.tv/BobRoss</th>
+      <td>2015-03-27 17:24:24</td>
+      <td>Bob Ross - Horizons West (Season 6 Episode 8)</td>
+      <td>- Welcome back, I&amp;#39;m awful\nglad to see you...</td>
+    </tr>
+    <tr>
+      <th>Season 6 of The Joy of Painting with Bob Ross features the following wonderful painting instructions: Blue River, Nature's Edge, Morning Mist, Whispering Stream, Secluded Forest, Snow Trail, Arctic Beauty, Horizons West, High Chateau, Country Life, Western Expanse, Marshlands, and Blaze of Color.\n\nSubscribe to the official Bob Ross YouTube channel - http://bit.ly/BobRossSubscribe\n\nSeason 6 Playlist: https://www.youtube.com/playlist?list=PLAEQD0ULngi5UR35RJsvL0Xvlm3oeY4Ma\n\nThe Joy of Painting : Season 20 is now on iTunes! http://bit.ly/iTunesBobRoss\n\nOfficial Bob Ross website - http://www.BobRoss.com\n\nOfficial Bob Ross Twitch.tv Stream! - http://twitch.tv/BobRoss</th>
+      <td>2015-03-27 18:16:39</td>
+      <td>Bob Ross - Blue River (Season 6 Episode 1)</td>
+      <td>(peaceful instrumental music) - Hello, I&amp;#39;m...</td>
+    </tr>
+    <tr>
+      <th>Season 5 of The Joy of Painting with Bob Ross features the following wonderful painting instructions: Mountain Waterfall, Twilight Meadow, Mountain Blossoms, Winter Stillness, Quiet Pond, OCean Sunrise, Bubbling Brook, Arizona Splendor, Anatomy of a Wave, The Windmill, Autumn Glory, Indian Girl, and Meadow Stream.\n\nSubscribe to the official Bob Ross YouTube channel - http://bit.ly/BobRossSubscribe\n\nSeason 5 Playlist: https://www.youtube.com/playlist?list=PLAEQD0ULngi6bAFRfcqgpKP4T4SnoxoAz\n\nThe Joy of Painting : Season 20 is now on iTunes! http://bit.ly/iTunesBobRoss\n\nOfficial Bob Ross website - http://www.BobRoss.com\n\nOfficial Bob Ross Twitch.tv Stream! - http://twitch.tv/BobRoss</th>
+      <td>2015-03-27 18:34:49</td>
+      <td>Bob Ross - Twilight Meadow (Season 5 Episode 2)</td>
+      <td>- Hi, welcome back. I&amp;#39;m glad to see you to...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The following will build out text generator.
+We'll do the following,</p>
+<ul>
+<li>load a sample of the dataset (about 30%)",</li>
+<li>combine all the transcription into one long string,</li>
+<li>We use BeautifulSoup to remove any html tags in the text,</li>
+<li>we'll then generate a list of all the characters in the transcription</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=.</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">test_df</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>75</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">descriptions</span> <span class="o">=</span> <span class="s1">''</span>
+<span class="n">all_transcriptions</span> <span class="o">=</span> <span class="s1">''</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">test_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">all_transcriptions</span> <span class="o">+=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">'transcript'</span><span class="p">],</span><span class="s2">"lxml"</span><span class="p">)</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">,</span> <span class="s1">' '</span><span class="p">)</span>  
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">all_transcriptions</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>1522162</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next, we'll just display a piece of the all_transcriptions just to see what it looks like</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_transcriptions</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>"- Hi, welcome back. I'm certainly glad you could join us today. And, as you can see, today I have on"</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">chars</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_transcriptions</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Count of unique characters (i.e., features):'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">))</span>
+<span class="n">char_indices</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">c</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chars</span><span class="p">))</span>
+<span class="n">indices_char</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chars</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Count of unique characters (i.e., features): 81
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next, we'll generate seperate lists of all the strings that we'll feed into the model
+This list is 40 charcters of the full text, seperated by 3 characters(<code>step</code>)</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">maxlen</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="n">step</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">next_chars</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_transcriptions</span><span class="p">)</span> <span class="o">-</span> <span class="n">maxlen</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+    <span class="n">sentences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">all_transcriptions</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">maxlen</span><span class="p">])</span>
+    <span class="n">next_chars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">all_transcriptions</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">maxlen</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'nb sequences:'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">sentences</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">next_chars</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>nb sequences: 507374
+["- Hi, welcome back. I'm certainly glad y", "i, welcome back. I'm certainly glad you ", "welcome back. I'm certainly glad you cou", "come back. I'm certainly glad you could ", "e back. I'm certainly glad you could joi", "ack. I'm certainly glad you could join u", ". I'm certainly glad you could join us t", "'m certainly glad you could join us toda", 'certainly glad you could join us today. ', 'tainly glad you could join us today. And'] 
+
+['o', 'c', 'l', 'j', 'n', 's', 'o', 'y', 'A', ',']
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We now have 507374 lists, that each contain 40 characters of the string,
+The first list is <code>- Hi, welcome back. I'm certainly glad y</code>, followed by <code>i, welcome back. I'm certainly glad you</code></p>
+<p>Next, we'll create tensors of x and y, that contain the lists of all the sentences, we've created</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">),</span> <span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentences</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">char_indices</span><span class="p">[</span><span class="n">char</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">char_indices</span><span class="p">[</span><span class="n">next_chars</span><span class="p">[</span><span class="n">i</span><span class="p">]]]</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Model">
+<a class="anchor" href="#Model" aria-hidden="true"><span class="octicon octicon-link"></span></a>Model<a class="anchor-link" href="#Model"> </a>
+</h2>
+<p>Next, we'll build out our model</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Activation</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">LSTM</span>
+<span class="kn">from</span> <span class="nn">keras.optimizers</span> <span class="kn">import</span> <span class="n">RMSprop</span>
+<span class="kn">from</span> <span class="nn">keras.callbacks</span> <span class="kn">import</span> <span class="n">LambdaCallback</span><span class="p">,</span> <span class="n">ModelCheckpoint</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">io</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The following are 2 functions that will print the prediction from each epoch, as well as the <code>temperature</code></p>
+<p>temperature is defined as the following:</p>
+<p>"Temperature is a scaling factor applied to the outputs of our dense layer before applying the softmaxactivation function. In a nutshell, it defines how conservative or creative the model's guesses are for the next character in a sequence. Lower values of temperature (e.g., 0.2) will generate \"safe\" guesses whereas values of temperature above 1.0 will start to generate riskier guesses. Think of it as the amount of surpise you'd have at seeing an English word start with \"st\" versus \"sg\". When temperature is low, we may get lots of the's and and's; when temperature is high, things get more unpredictable.</p>
+<p>-- <a href="https://medium.freecodecamp.org/applied-introduction-to-lstms-for-text-generation-380158b29fb3">https://medium.freecodecamp.org/applied-introduction-to-lstms-for-text-generation-380158b29fb3</a></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="c1"># helper function to sample an index from a probability array</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'float64'</span><span class="p">)</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span> <span class="o">/</span> <span class="n">temperature</span>
+    <span class="n">exp_preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">exp_preds</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">exp_preds</span><span class="p">)</span>
+    <span class="n">probas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">preds</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">probas</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">on_epoch_end</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">logs</span><span class="p">):</span>
+    <span class="c1"># Function invoked for specified epochs. Prints generated text.</span>
+    <span class="c1"># Using epoch+1 to be consistent with the training epochs printed by Keras</span>
+    <span class="k">if</span> <span class="n">epoch</span><span class="o">+</span><span class="mi">1</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">epoch</span><span class="o">+</span><span class="mi">1</span> <span class="o">==</span> <span class="mi">15</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'----- Generating text after Epoch: </span><span class="si">%d</span><span class="s1">'</span> <span class="o">%</span> <span class="n">epoch</span><span class="p">)</span>
+
+        <span class="n">start_index</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_transcriptions</span><span class="p">)</span> <span class="o">-</span> <span class="n">maxlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">diversity</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'----- diversity:'</span><span class="p">,</span> <span class="n">diversity</span><span class="p">)</span>
+
+            <span class="n">generated</span> <span class="o">=</span> <span class="s1">''</span>
+            <span class="n">sentence</span> <span class="o">=</span> <span class="n">all_transcriptions</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span> <span class="n">start_index</span> <span class="o">+</span> <span class="n">maxlen</span><span class="p">]</span>
+            <span class="n">generated</span> <span class="o">+=</span> <span class="n">sentence</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'----- Generating with seed: "'</span> <span class="o">+</span> <span class="n">sentence</span> <span class="o">+</span> <span class="s1">'"'</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">generated</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">400</span><span class="p">):</span>
+                <span class="n">x_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">)))</span>
+                <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+                    <span class="n">x_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">char_indices</span><span class="p">[</span><span class="n">char</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+                <span class="n">preds</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_pred</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">next_index</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">diversity</span><span class="p">)</span>
+                <span class="n">next_char</span> <span class="o">=</span> <span class="n">indices_char</span><span class="p">[</span><span class="n">next_index</span><span class="p">]</span>
+
+                <span class="n">generated</span> <span class="o">+=</span> <span class="n">next_char</span>
+                <span class="n">sentence</span> <span class="o">=</span> <span class="n">sentence</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">next_char</span>
+
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">next_char</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'----- Not generating text after Epoch: </span><span class="si">%d</span><span class="s1">'</span> <span class="o">%</span> <span class="n">epoch</span><span class="p">)</span>
+
+<span class="n">generate_text</span> <span class="o">=</span> <span class="n">LambdaCallback</span><span class="p">(</span><span class="n">on_epoch_end</span><span class="o">=</span><span class="n">on_epoch_end</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">build_basic_model</span><span class="p">()</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">))))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">)))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Activation</span><span class="p">(</span><span class="s2">"softmax"</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here, we'll create our model.
+After a few tests, i've seen that having 2 LSTMs with a batch size of 256, returns very good results.
+The first model is a basic model with 1 LSTM'</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">build_basic_model</span><span class="p">()</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">RMSprop</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">'categorical_crossentropy'</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">)</span>
+
+<span class="c1"># define the checkpoint</span>
+<span class="n">filepath</span> <span class="o">=</span> <span class="s2">"weights.hdf5"</span>
+<span class="n">checkpoint</span> <span class="o">=</span> <span class="n">ModelCheckpoint</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> 
+                             <span class="n">monitor</span><span class="o">=</span><span class="s1">'loss'</span><span class="p">,</span> 
+                             <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
+                             <span class="n">save_best_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+                             <span class="n">mode</span><span class="o">=</span><span class="s1">'min'</span><span class="p">)</span>
+
+<span class="c1"># fit model using our gpu</span>
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'/gpu:0'</span><span class="p">):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+              <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+              <span class="n">epochs</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+              <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+              <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">generate_text</span><span class="p">,</span> <span class="n">checkpoint</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Epoch 1/15
+ - 168s - loss: 1.4472
+
+----- Generating text after Epoch: 0
+----- diversity: 0.2
+----- Generating with seed: "ainted in your mountain. There. Isn't th"
+ainted in your mountain. There. Isn't the back, and there we go the to start out of the back. There we go with the back, and there. There we go. There. There. There. There. And we'll go back and start the background of this one of the back of the base of the back. There. And we'll start one of the brush on the back, and there's a little bit of the back. There we go that one of the back. There we go the back. And we want the back, and th
+----- diversity: 0.5
+----- Generating with seed: "ainted in your mountain. There. Isn't th"
+ainted in your mountain. There. Isn't that easy like that. So let's do that. So let's go the back. Where we got the way of the old bright over the touching. I have to make the let the hang here. I stay over there, and that's run on the base the ingict of right in here lives right there. Okay, let's just go back and so back and just tap a little bright on our we want that with the lings on the old bit of the backer. Maybe they're wark it
+----- diversity: 1.0
+----- Generating with seed: "ainted in your mountain. There. Isn't th"
+ainted in your mountain. There. Isn't them, ay up a many, back come spung it up ther hal chane and illoss, grettle strong, let's haf hereon well refcacalions and we just do clims to you're leanto so wet. There. There's and here and that easy. Hever in that's good let that little magic you. They's a little 'bounder There. There. And we use a littled, down like right here. And we can darker this tell. Don't kich xop and darked. Now the up
+----- diversity: 1.2
+----- Generating with seed: "ainted in your mountain. There. Isn't th"
+ainted in your mountain. There. Isn't that you one DaneDrly. Othat'els, bat that time. Let's do kap lives loanince wherever we just bring that lives rignt down here. Okayh over this paintings in ther staday shader, you, if a dirdiciodd then only shapes oir all right. There, they're nice that big,. E. There we goess like the painting and a little paintings. Changen and beons that you'res. So nothill shay, fan brost, he ndime sortmort pea
+
+Epoch 00001: loss improved from inf to 1.44717, saving model to weights.hdf5
+Epoch 2/15
+ - 165s - loss: 1.1462
+
+----- Not generating text after Epoch: 1
+
+Epoch 00002: loss improved from 1.44717 to 1.14621, saving model to weights.hdf5
+Epoch 3/15
+ - 165s - loss: 1.0918
+
+----- Not generating text after Epoch: 2
+
+Epoch 00003: loss improved from 1.14621 to 1.09180, saving model to weights.hdf5
+Epoch 4/15
+ - 164s - loss: 1.0639
+
+----- Not generating text after Epoch: 3
+
+Epoch 00004: loss improved from 1.09180 to 1.06386, saving model to weights.hdf5
+Epoch 5/15
+ - 166s - loss: 1.0443
+
+----- Not generating text after Epoch: 4
+
+Epoch 00005: loss improved from 1.06386 to 1.04430, saving model to weights.hdf5
+Epoch 6/15
+ - 165s - loss: 1.0308
+
+----- Not generating text after Epoch: 5
+
+Epoch 00006: loss improved from 1.04430 to 1.03085, saving model to weights.hdf5
+Epoch 7/15
+ - 165s - loss: 1.0200
+
+----- Not generating text after Epoch: 6
+
+Epoch 00007: loss improved from 1.03085 to 1.02002, saving model to weights.hdf5
+Epoch 8/15
+ - 163s - loss: 1.0105
+
+----- Not generating text after Epoch: 7
+
+Epoch 00008: loss improved from 1.02002 to 1.01048, saving model to weights.hdf5
+Epoch 9/15
+ - 165s - loss: 1.0039
+
+----- Not generating text after Epoch: 8
+
+Epoch 00009: loss improved from 1.01048 to 1.00394, saving model to weights.hdf5
+Epoch 10/15
+ - 167s - loss: 0.9996
+
+----- Not generating text after Epoch: 9
+
+Epoch 00010: loss improved from 1.00394 to 0.99955, saving model to weights.hdf5
+Epoch 11/15
+ - 162s - loss: 0.9939
+
+----- Not generating text after Epoch: 10
+
+Epoch 00011: loss improved from 0.99955 to 0.99389, saving model to weights.hdf5
+Epoch 12/15
+ - 166s - loss: 0.9918
+
+----- Not generating text after Epoch: 11
+
+Epoch 00012: loss improved from 0.99389 to 0.99178, saving model to weights.hdf5
+Epoch 13/15
+ - 166s - loss: 0.9900
+
+----- Not generating text after Epoch: 12
+
+Epoch 00013: loss improved from 0.99178 to 0.98998, saving model to weights.hdf5
+Epoch 14/15
+ - 165s - loss: 0.9873
+
+----- Not generating text after Epoch: 13
+
+Epoch 00014: loss improved from 0.98998 to 0.98731, saving model to weights.hdf5
+Epoch 15/15
+ - 165s - loss: 0.9886
+
+----- Generating text after Epoch: 14
+----- diversity: 0.2
+----- Generating with seed: "tly tap this and pull down at the same t"
+tly tap this and pull down at the same tore of the brush and the secret. And the</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.5/dist-packages/ipykernel_launcher.py:4: RuntimeWarning: divide by zero encountered in log
+  after removing the cwd from sys.path.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>y're back here in the bright and that lives right there. There we go. And it's all the color in the bristles that live in the bright and little bit of the bright red of the brush. And they come right there. And they're a little bit of the brown and some little things that live out here. And a little bit of the bright and then we have a little bit of the bit 
+----- diversity: 0.5
+----- Generating with seed: "tly tap this and pull down at the same t"
+tly tap this and pull down at the same thing because that's where a little bit of color in there. And we'll go sid it to get into the top, and they come right there. That still the black gesso basic little black, they paint thinner, right over the brush and happening beautiful way of your painting, that live out there. And becommen it back and sort of some big tree that lives real and sort of this side it dark to dry the big mountches a
+----- diversity: 1.0
+----- Generating with seed: "tly tap this and pull down at the same t"
+tly tap this and pull down at the same toret it. Now then? I wanna have another little trees very shows here and there it'll put very all sort of decision it. Okay, and you's hadmy nice little, glad you want over here. They looks like dark afthainctoujbly aftosistic oary, maybe right in here, but that's goingtilly to dry pressort of the oh, that's sone's. , just to diffue all the would becamina's at sion. Let's start over here on cere a
+----- diversity: 1.2
+----- Generating with seed: "tly tap this and pull down at the same t"
+tly tap this and pull down at the same twig, sup. some little grassy area, little workent, you see, it is gings. Don't neem comrstece a. Inlistion, makes this just in tood a reasinn forward. oDanatided just a knife.  is us how a little foackes using aapriaens. I think we see letta after we very, it's undistant green something. It ...  as phintione into a phthalo, eve all right forward, uh it, tllay right over, . Just bring ae. Anothe. O
+
+Epoch 00015: loss did not improve from 0.98731
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">You</span> <span class="n">can</span> <span class="n">see</span> <span class="n">that</span> <span class="n">the</span> <span class="n">results</span> <span class="n">were</span> <span class="n">good</span><span class="p">,</span> <span class="n">but</span> <span class="n">lets</span> <span class="n">go</span> <span class="n">deeper</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Deeper">
+<a class="anchor" href="#Deeper" aria-hidden="true"><span class="octicon octicon-link"></span></a>Deeper<a class="anchor-link" href="#Deeper"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here, we'll be using 2 LSTM's and dropout, durning training, we'll save the best model for later</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dropout</span>
+
+<span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="k">def</span> <span class="nf">build_deeper_model</span><span class="p">():</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">)),</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="n">batch_size</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s1">'softmax'</span><span class="p">))</span>
+    
+<span class="n">model</span> <span class="o">=</span> <span class="n">build_deeper_model</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">'categorical_crossentropy'</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">'adam'</span><span class="p">)</span>
+
+
+<span class="c1"># define the checkpoint</span>
+<span class="n">filepath</span> <span class="o">=</span> <span class="s2">"bob_ross/weights-deepeer.hdf5"</span>
+<span class="n">checkpoint</span> <span class="o">=</span> <span class="n">ModelCheckpoint</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> 
+                             <span class="n">monitor</span><span class="o">=</span><span class="s1">'loss'</span><span class="p">,</span> 
+                             <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
+                             <span class="n">save_best_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+                             <span class="n">mode</span><span class="o">=</span><span class="s1">'min'</span><span class="p">)</span>
+
+<span class="c1"># fit model using our gpu</span>
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">'/gpu:0'</span><span class="p">):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+              <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+              <span class="n">epochs</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+              <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+              <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">generate_text</span><span class="p">,</span> <span class="n">checkpoint</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Load-Model">
+<a class="anchor" href="#Load-Model" aria-hidden="true"><span class="octicon octicon-link"></span></a>Load Model<a class="anchor-link" href="#Load-Model"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After training, which took about 2 hours to train, using a GCP instance with a Tesla P100 GPU, we load the best model and perfrom a prediction</p>
+<p>We loaded our model from our weights, and now we can predict
+I choose a temperature of <code>0.5</code>. it seemed the have the best results</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">load_model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="s2">"bob_ross/weights-deepeer.hdf5"</span><span class="p">)</span>
+<span class="n">model</span>
+<span class="c1"># model.compile(loss='categorical_crossentropy', optimizer='adam')</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&lt;keras.engine.sequential.Sequential at 0x7f78bb4f7748&gt;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">'categorical_crossentropy'</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">'adam'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">int_to_char</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chars</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">start_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+<span class="k">for</span> <span class="n">diversity</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'----- diversity:'</span><span class="p">,</span> <span class="n">diversity</span><span class="p">)</span>
+
+    <span class="n">generated</span> <span class="o">=</span> <span class="s1">''</span>
+    <span class="n">sentence</span> <span class="o">=</span> <span class="n">all_transcriptions</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span> <span class="n">start_index</span> <span class="o">+</span> <span class="n">maxlen</span><span class="p">]</span>
+    <span class="n">generated</span> <span class="o">+=</span> <span class="n">sentence</span>
+<span class="c1">#     print('----- Generating with seed: "' + sentence + '"')</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">generated</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+        <span class="n">x_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+            <span class="n">x_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">char_indices</span><span class="p">[</span><span class="n">char</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+        <span class="n">preds</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_pred</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">next_index</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">diversity</span><span class="p">)</span>
+        <span class="n">next_char</span> <span class="o">=</span> <span class="n">indices_char</span><span class="p">[</span><span class="n">next_index</span><span class="p">]</span>
+
+        <span class="n">generated</span> <span class="o">+=</span> <span class="n">next_char</span>
+        <span class="n">sentence</span> <span class="o">=</span> <span class="n">sentence</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">next_char</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">next_char</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>----- diversity: 0.5
+- Hi, welcome back. I'm certainly glad you can do this black canvas. I have the same clouds that the light on that little bushes that lives on the brush, and I'm gonna go up in here. There, something like that. There, and we'll just put a little bit of this but of the Prussian blue to think on the brush here. We'll just push in some little bushes. And I wanna see what you looks like that, let's go back into the bright red. And you can make it a little bit of the little bushes and sidight to have a little bit of the little light color. Just a little bit of the background color to the colors on the brush, and I wanna do is in the background, I'm gonna put a little bit of black in here and there. Just sort of lay the color. There, that easy. And we can see it in a little more of the lighter and they go right into the one of the lay of the paintings that you have the colors that you go. And we got a little bit of lighter on the canvas on the canvas, and we can see the sun up and make it any signes that come back in the color on 
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As you can see above, we've generated a good amount of text from all of our transcriptions.
+Notice, that the model was able to understand color names (Prussian blue) and you kind of get the idea that its a story about painting.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="tbass134/ml-portfolio"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/ml-portfolio/nlp/keras/2020/11/06/Bob-Ross-Episode-Generator.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/ml-portfolio/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/ml-portfolio/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/ml-portfolio/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>An easy to use blogging platform with support for Jupyter Notebooks.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/fastai" title="fastai"><svg class="svg-icon grey"><use xlink:href="/ml-portfolio/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/fastdotai" title="fastdotai"><svg class="svg-icon grey"><use xlink:href="/ml-portfolio/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
