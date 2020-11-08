@@ -1,1 +1,1 @@
-Sitemap: http://tonyhung.xyz/http://tonyhung.xyz/sitemap.xml
+Sitemap: https://tbass134.github.io/ml-portfolio/sitemap.xml
