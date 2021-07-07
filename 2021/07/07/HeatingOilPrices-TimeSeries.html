@@ -10,13 +10,13 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="portfolio site of Tony Hung." />
 <meta property="og:description" content="portfolio site of Tony Hung." />
-<link rel="canonical" href="https://tonyhung.xyz/2021/07/06/_07_07_HeatingOilPrices-TimeSeries.html" />
-<meta property="og:url" content="https://tonyhung.xyz/2021/07/06/_07_07_HeatingOilPrices-TimeSeries.html" />
+<link rel="canonical" href="https://tonyhung.xyz/2021/07/07/HeatingOilPrices-TimeSeries.html" />
+<meta property="og:url" content="https://tonyhung.xyz/2021/07/07/HeatingOilPrices-TimeSeries.html" />
 <meta property="og:site_name" content="Tony Hung (Machine Learing Engineer)" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-07-06T00:00:00-05:00" />
+<meta property="article:published_time" content="2021-07-07T00:00:00-05:00" />
 <script type="application/ld+json">
-{"url":"https://tonyhung.xyz/2021/07/06/_07_07_HeatingOilPrices-TimeSeries.html","@type":"BlogPosting","headline":"Predicting the price of Heating Oil using PyCaret","dateModified":"2021-07-06T00:00:00-05:00","datePublished":"2021-07-06T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://tonyhung.xyz/2021/07/06/_07_07_HeatingOilPrices-TimeSeries.html"},"description":"portfolio site of Tony Hung.","@context":"https://schema.org"}</script>
+{"url":"https://tonyhung.xyz/2021/07/07/HeatingOilPrices-TimeSeries.html","@type":"BlogPosting","headline":"Predicting the price of Heating Oil using PyCaret","dateModified":"2021-07-07T00:00:00-05:00","datePublished":"2021-07-07T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://tonyhung.xyz/2021/07/07/HeatingOilPrices-TimeSeries.html"},"description":"portfolio site of Tony Hung.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://tonyhung.xyz/feed.xml" title="Tony Hung (Machine Learing Engineer)" /><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
@@ -71,8 +71,8 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Predicting the price of Heating Oil using PyCaret</h1><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-07-06T00:00:00-05:00" itemprop="datePublished">
-        Jul 6, 2021
+    <h1 class="post-title p-name" itemprop="name headline">Predicting the price of Heating Oil using PyCaret</h1><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-07-07T00:00:00-05:00" itemprop="datePublished">
+        Jul 7, 2021
       </time>
        • <span class="read-time" title="Estimated read time">
     
@@ -88,19 +88,19 @@ window.onload = wrap_img;
         <div class="pb-5 d-flex flex-wrap flex-justify-end">
           <div class="px-2">
 
-    <a href="https://github.com/tbass134/ml-portfolio/tree/master/_notebooks/2021_07_07_HeatingOilPrices-TimeSeries.ipynb" role="button" target="_blank">
+    <a href="https://github.com/tbass134/ml-portfolio/tree/master/_notebooks/2021-07-07-HeatingOilPrices-TimeSeries.ipynb" role="button" target="_blank">
 <img class="notebook-badge-image" src="/assets/badges/github.svg" alt="View On GitHub">
     </a>
 </div>
 
           <div class="px-2">
-    <a href="https://mybinder.org/v2/gh/tbass134/ml-portfolio/master?filepath=_notebooks%2F2021_07_07_HeatingOilPrices-TimeSeries.ipynb" target="_blank">
+    <a href="https://mybinder.org/v2/gh/tbass134/ml-portfolio/master?filepath=_notebooks%2F2021-07-07-HeatingOilPrices-TimeSeries.ipynb" target="_blank">
         <img class="notebook-badge-image" src="/assets/badges/binder.svg" alt="Open In Binder"/>
     </a>
 </div>
 
           <div class="px-2">
-    <a href="https://colab.research.google.com/github/tbass134/ml-portfolio/blob/master/_notebooks/2021_07_07_HeatingOilPrices-TimeSeries.ipynb" target="_blank">
+    <a href="https://colab.research.google.com/github/tbass134/ml-portfolio/blob/master/_notebooks/2021-07-07-HeatingOilPrices-TimeSeries.ipynb" target="_blank">
         <img class="notebook-badge-image" src="/assets/badges/colab.svg" alt="Open In Colab"/>
     </a>
 </div>
@@ -112,7 +112,7 @@ window.onload = wrap_img;
 #################################################
 ### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
 #################################################
-# file to edit: _notebooks/2021_07_07_HeatingOilPrices-TimeSeries.ipynb
+# file to edit: _notebooks/2021-07-07-HeatingOilPrices-TimeSeries.ipynb
 -->
 
 <div class="container" id="notebook-container">
@@ -2403,7 +2403,7 @@ We'll also go over how the process on how the data was collected.</p>
 
 
 
-  </div><a class="u-url" href="/2021/07/06/_07_07_HeatingOilPrices-TimeSeries.html" hidden></a>
+  </div><a class="u-url" href="/2021/07/07/HeatingOilPrices-TimeSeries.html" hidden></a>
 </article>
       </div>
     </main><footer class="site-footer h-card">
