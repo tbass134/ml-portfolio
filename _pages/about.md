@@ -4,8 +4,6 @@ title: About Me
 permalink: /about/
 ---
 
-This website is powered by **[fastpages](https://github.com/fastai/fastpages)** [^1].
+My Name is Tony Hung, and I have been working as a Machine Learning Engineer for over 4 years.
 
 
-
-[^1]:a blogging platform that natively supports Jupyter notebooks in addition to other formats.
